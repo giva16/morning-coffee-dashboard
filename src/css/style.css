@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Roboto', 'Courier New', Courier, monospace;
+  background: no-repeat center center fixed;
+  --webkit-background-size: cover;
+  --moz-background-size: cover;
+  --moz-background-size: cover;
+  background-size: cover;
+  color: white;
+  text-shadow: 1px 1px 3px white;
+}
+
+header {
+  height: 60px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+main {
+  height: calc(100% - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1.time {
+  text-align: center;
+  font-size: 5rem;
+}
+
+footer {
+  width: 100%;
+  height: 60px;
+  font-size: 1.2rem;
+  position: fixed;
+  bottom: 0;
+  padding: 20px 20px 10px;
+}
+
+.author {
+}

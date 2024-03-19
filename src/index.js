@@ -40,7 +40,7 @@ const DisplayController = (() => {
       //set text and image
       coinNameEl.textContent = coinData.name;
       iconEl.setAttribute('src', coinData.image['small']);
-      priceEl.textContent = coinData.market_data.current_price.usd;
+      priceEl.textContent = `$${coinData.market_data.current_price.usd}`;
 
       //structure the elements
       iconNameContainer.appendChild(iconEl);
@@ -50,9 +50,6 @@ const DisplayController = (() => {
 
       //add to DOM
       cryptoListEl.appendChild(coinEl);
-
-      // sleep to prevent error 429 (too many requests)
-      await ApiHandler.sleep(500);
     });
   };
 
@@ -71,5 +68,7 @@ const DisplayController = (() => {
     renderCrypto();
   };
 
-  document.addEventListener('DOMContentLoaded', render);
+  return render();
 })();
+
+DisplayController.render();

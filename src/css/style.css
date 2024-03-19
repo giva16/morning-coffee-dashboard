@@ -14,15 +14,18 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  height: 100vh;
-  width: 100vw;
-  font-family: 'Roboto', 'Courier New', Courier, monospace;
+html {
   background: no-repeat center center fixed;
   --webkit-background-size: cover;
   --moz-background-size: cover;
   --moz-background-size: cover;
   background-size: cover;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Roboto', 'Courier New', Courier, monospace;
   color: white;
   text-shadow: 1px 1px 3px white;
 }
@@ -46,13 +49,23 @@ header {
   flex: 1;
   max-width: 300px;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
+}
+
+.crypto > span {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+  padding: 10px;
+  background-color: #66666656;
 }
 
 .coin {
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  background-color: #66666656;
+  padding: 10px;
 }
 
 .icon-name {
@@ -61,6 +74,11 @@ header {
 
 .icon-name .name {
   margin-left: 10px;
+}
+
+.weather {
+  background-color: #66666656;
+  padding: 10px;
 }
 
 main {

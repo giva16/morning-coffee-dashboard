@@ -1,5 +1,5 @@
 const ApiHandler = (() => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const _fetchData = async (url) => {
     try {
@@ -16,7 +16,7 @@ const ApiHandler = (() => {
 
   const getImage = async () => {
     try {
-      const data = await _fetchData('https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature');
+      const data = await _fetchData('https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=city');
 
       if (data instanceof Error) throw new Error(data);
 
@@ -35,6 +35,9 @@ const ApiHandler = (() => {
     // get id of each coins, then search for the coin based on the id
     try {
       const data = await _fetchData(`https://api.coingecko.com/api/v3/search?query=${cryptoName}`);
+
+      // sleep to prevent error 429 (too many requests)
+      await _sleep(2000);
 
       if (data instanceof Error) throw new Error(data);
 

@@ -1,4 +1,6 @@
 const ApiHandler = (() => {
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const _fetchData = async (url) => {
     try {
       const response = await fetch(url);

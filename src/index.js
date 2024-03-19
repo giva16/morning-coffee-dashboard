@@ -1,60 +1,6 @@
 // Entry point for our source codes
 import './css/style.css';
-
-const fetchData = async (url) => {
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) throw new Error(`${response.statusText}`);
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    return error;
-  }
-};
-
-const getImage = async () => {
-  try {
-    const data = await fetchData('https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature');
-
-    if (data instanceof Error) throw new Error(data);
-
-    return { imageURL: data.urls.full, author: data.user.name };
-  } catch (error) {
-    console.log(error);
-    return {
-      imageURL:
-        'https://images.unsplash.com/photo-1707929591972-43d4060c3377?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      author: 'Jonny Gios',
-    };
-  }
-};
-
-const getCryptoInfo = async (...cryptoNames) => {
-  const coins = [];
-
-  // get id of each coins, then search for the coin based on the id
-  cryptoNames.forEach(async (cryptoName) => {
-    try {
-      const data = await fetchData(`https://api.coingecko.com/api/v3/search?query=${cryptoName}`);
-
-      if (data instanceof Error) throw new Error(data);
-
-      const id = data.coins[0].id;
-      const coin = await fetchData(`https://api.coingecko.com/api/v3/coins/${id}`);
-      coins.push(coin);
-
-      //Timeout to avoid error 429 (too many request)
-      setTimeout(() => {}, 100);
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-  });
-  console.log(coins);
-  return coins;
-};
+import ApiHandler from './ApiHandler';
 
 const renderAuthor = (author) => {
   const footer = document.querySelector('footer');
@@ -71,13 +17,48 @@ const renderAuthor = (author) => {
   footer.appendChild(divEl);
 };
 
-const renderCrypto = (crypto) => {};
+const renderCrypto = async () => {
+  const coins = ['ethereum', 'bitcoin', 'dogecoin', 'litecoin'];
+  const cryptoListEl = document.querySelector('.crypto');
+
+  coins.forEach(async (coin) => {
+    const coinData = await ApiHandler.getCryptoData(coin);
+    const coinEl = document.createElement('div');
+    const iconNameContainer = document.createElement('div');
+    const iconEl = document.createElement('img');
+    const coinNameEl = document.createElement('div');
+    const priceEl = document.createElement('div');
+
+    // add classes
+    coinEl.classList.add('coin');
+    iconNameContainer.classList.add('icon-name');
+    iconEl.classList.add('icon');
+    coinNameEl.classList.add('name');
+    priceEl.classList.add('price');
+
+    //set text and image
+    coinNameEl.textContent = coinData.name;
+    iconEl.setAttribute('src', coinData.image['small']);
+    priceEl.textContent = coinData.market_data.current_price.usd;
+
+    //structure the elements
+    iconNameContainer.appendChild(iconEl);
+    iconNameContainer.appendChild(coinNameEl);
+    coinEl.appendChild(iconNameContainer);
+    coinEl.appendChild(priceEl);
+
+    //add to DOM
+    cryptoListEl.appendChild(coinEl);
+
+    // sleep to prevent error 429 (too many requests)
+    setTimeout(() => {}, 2000);
+  });
+};
 
 const render = async () => {
-  const imageData = await getImage();
+  const imageData = await ApiHandler.getImage();
   const imageURL = imageData.imageURL;
   const author = imageData.author;
-  const coins = getCryptoInfo('ethereum', 'bitcoin', 'dogecoin', 'litecoin');
 
   //render background image
   document.body.style.background = `url(${imageURL})`;
@@ -86,6 +67,7 @@ const render = async () => {
   renderAuthor(author);
 
   //render crypto
+  renderCrypto();
 };
 
 render();

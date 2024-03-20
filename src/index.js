@@ -78,6 +78,9 @@ const DisplayController = (() => {
     const tempEl = document.createElement('div');
 
     detailsEl.classList.add('details-weather');
+    cityEl.classList.add('city');
+    tempEl.classList.add('temp');
+
     cityEl.textContent = city;
     tempEl.textContent = Math.ceil(temp) + String.fromCharCode(176);
 
@@ -107,7 +110,7 @@ const DisplayController = (() => {
     const imageURL = imageData.imageURL;
     const author = imageData.author;
 
-    document.body.style.background = `url(${imageURL})`;
+    document.body.style.backgroundImage = `url(${imageURL})`;
     _renderAuthor(author);
     _renderCrypto();
     setInterval(_renderTime, 1000); // run render time every second to keep time updated

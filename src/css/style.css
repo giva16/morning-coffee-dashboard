@@ -13,16 +13,12 @@ body {
   font-size: 16px;
   overflow-x: hidden;
 }
-
-html {
+body {
   background: no-repeat center center fixed;
   --webkit-background-size: cover;
   --moz-background-size: cover;
   --moz-background-size: cover;
   background-size: cover;
-}
-
-body {
   height: 100vh;
   width: 100vw;
   font-family: 'Roboto', 'Courier New', Courier, monospace;
@@ -81,6 +77,20 @@ main {
 
 .icon-name .name {
   margin-left: 10px;
+}
+
+.weather {
+  display: flex;
+}
+
+.weather .details-weather {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.details-weather .temp {
+  font-size: 2rem;
 }
 
 .weather,

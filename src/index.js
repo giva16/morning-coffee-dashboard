@@ -106,13 +106,20 @@ const DisplayController = (() => {
     // pass lat and long to openweather api to get the weather based on location
   };
 
-  const render = async () => {
-    const imageData = await ApiHandler.getImage();
-    const imageURL = imageData.imageURL;
-    const author = imageData.author;
+  const _renderImage = (imageURL) => {
+    const imageContainerEl = document.querySelector('.image-container');
+    imageContainerEl.style.backgroundImage = `url(${imageURL})`;
+  };
 
-    document.body.style.backgroundImage = `url(${imageURL})`;
-    _renderAuthor(author);
+  const render = () => {
+    setInterval(async () => {
+      let imageData = await ApiHandler.getImage();
+      let imageURL = imageData.imageURL;
+      let author = imageData.author;
+      _renderImage(imageURL);
+      _renderAuthor(author);
+    }, 4000);
+
     _renderCrypto();
     setInterval(_renderTime, 1000); // run render time every second to keep time updated
     _renderWeather();

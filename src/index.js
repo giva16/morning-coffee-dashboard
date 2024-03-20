@@ -19,7 +19,7 @@ const DisplayController = (() => {
   };
 
   const renderCrypto = async () => {
-    const coins = ['ethereum', 'bitcoin', 'dogecoin', 'litecoin'];
+    const coins = ['ethereum', 'bitcoin'];
     const cryptoListEl = document.querySelector('.crypto');
 
     coins.forEach(async (coin) => {
@@ -63,6 +63,14 @@ const DisplayController = (() => {
     timeEl.textContent = time;
   };
 
+  const renderWeather = () => {
+    //use geolocation API to get current lat and long
+    ApiHandler.getWeather('metric')
+      .then((weatherData) => console.log(weatherData))
+      .catch((error) => alert(error));
+    // pass lat and long to openweather api to get the weather based on location
+  };
+
   const render = async () => {
     const imageData = await ApiHandler.getImage();
     const imageURL = imageData.imageURL;
@@ -74,8 +82,9 @@ const DisplayController = (() => {
     setInterval(renderTime, 1000); // run render time every second to keep time updated
   };
 
-  return { render, renderTime };
+  return { render, renderTime, renderWeather };
 })();
 
 DisplayController.render();
 DisplayController.renderTime();
+DisplayController.renderWeather();

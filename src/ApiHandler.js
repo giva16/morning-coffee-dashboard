@@ -4,7 +4,6 @@ const ApiHandler = (() => {
   const _fetchData = async (url) => {
     try {
       const response = await fetch(url);
-
       if (!response.ok) throw new Error(`${response.statusText}`);
 
       const data = await response.json();
@@ -31,13 +30,46 @@ const ApiHandler = (() => {
     }
   };
 
+  // get user's location and pass it to the openweather api
+  const getWeather = (units) =>
+    new Promise((resolve, reject) => {
+      const options = {
+        enableHighAccuracy: true,
+        maximumAge: 30000,
+        timeout: 27000,
+      };
+
+      const success = async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const response = await fetch(`https://apis.scrimba.com/openweathermap/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}`);
+
+        if (!response.ok) {
+          throw new Error('No weather data available');
+        }
+
+        const data = await response.json();
+
+        const temp = data.main.temp;
+        const city = data.name;
+        const description = data.weather[0].main;
+        const iconURL = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`; // get icon url
+
+        resolve({ city, temp, iconURL, description });
+      };
+
+      const error = () => reject('Sorry, no weather data available');
+
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    });
+
   const getCryptoData = async (cryptoName) => {
     // get id of each coins, then search for the coin based on the id
     try {
       const data = await _fetchData(`https://api.coingecko.com/api/v3/search?query=${cryptoName}`);
 
       // sleep to prevent error 429 (too many requests)
-      await _sleep(2000);
+      await _sleep(1000);
 
       if (data instanceof Error) throw new Error(data);
 
@@ -51,7 +83,7 @@ const ApiHandler = (() => {
     }
   };
 
-  return { getImage, getCryptoData };
+  return { getImage, getCryptoData, getWeather };
 })();
 
 export default ApiHandler;

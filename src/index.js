@@ -53,22 +53,29 @@ const DisplayController = (() => {
     });
   };
 
+  const renderTime = () => {
+    const timeEl = document.querySelector('.time');
+    const date = new Date();
+
+    // format time as Hours:Minutes AM/PM
+    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    timeEl.textContent = time;
+  };
+
   const render = async () => {
     const imageData = await ApiHandler.getImage();
     const imageURL = imageData.imageURL;
     const author = imageData.author;
 
-    //render background image
     document.body.style.background = `url(${imageURL})`;
-
-    // render author name
     renderAuthor(author);
-
-    //render crypto
     renderCrypto();
+    setInterval(renderTime, 1000); // run render time every second to keep time updated
   };
 
-  return render();
+  return { render, renderTime };
 })();
 
 DisplayController.render();
+DisplayController.renderTime();

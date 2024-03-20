@@ -40,7 +40,6 @@ body {
   flex: 1;
   max-width: 300px;
   flex-direction: column;
-  background-color: #66666656;
 }
 
 .crypto > span {
@@ -67,14 +66,12 @@ body {
   margin-left: 10px;
 }
 
-.weather {
-  background-color: #66666656;
-}
-
 .weather,
-.crypto {
+.crypto,
+h1.time {
   padding: 20px;
   border-radius: 20px;
+  background-color: #66666656;
 }
 
 main {

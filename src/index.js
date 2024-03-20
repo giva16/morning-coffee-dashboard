@@ -3,21 +3,6 @@ import './css/style.css';
 import ApiHandler from './ApiHandler';
 
 const DisplayController = (() => {
-  const _renderAuthor = (author) => {
-    const footer = document.querySelector('footer');
-    const divEl = document.createElement('div');
-
-    // format author's name
-    const authorName = author
-      .split(' ')
-      .map((part) => part[0].toUpperCase() + part.slice(1))
-      .join(' ');
-
-    divEl.classList.add('author');
-    divEl.textContent = `Image Taken By: ${authorName}`;
-    footer.appendChild(divEl);
-  };
-
   const _renderCrypto = async () => {
     const coins = ['ethereum', 'bitcoin'];
     const cryptoListEl = document.querySelector('.crypto');
@@ -98,31 +83,59 @@ const DisplayController = (() => {
         const iconEl = _buildWeatherIcon(weatherData.iconURL);
         const detailsEl = _buildWeatherDetails(weatherData.city, weatherData.temp);
 
-        weatherEl.textContent = '';
-        weatherEl.appendChild(iconEl);
+        weatherEl.weatherEl.appendChild(iconEl);
         weatherEl.appendChild(detailsEl);
       })
       .catch((error) => console.log(error));
     // pass lat and long to openweather api to get the weather based on location
   };
 
-  const _renderImage = (imageURL) => {
-    const imageContainerEl = document.querySelector('.image-container');
-    imageContainerEl.style.backgroundImage = `url(${imageURL})`;
+  const _preloadImages = async () => {
+    let i = 0;
+    const images = [];
+    while (i < 20) {
+      const imageData = await ApiHandler.getImage();
+      const author = imageData.author;
+      const imageURL = imageData.imageURL;
+
+      images.push({ imageURL: `url(${imageURL})`, author: author });
+      i++;
+    }
+
+    return images;
   };
 
-  const render = () => {
-    setInterval(async () => {
-      let imageData = await ApiHandler.getImage();
-      let imageURL = imageData.imageURL;
-      let author = imageData.author;
-      _renderImage(imageURL);
-      _renderAuthor(author);
-    }, 4000);
+  const _renderAuthor = (author) => {
+    const authorEl = document.querySelector('.author');
 
+    // format author's name
+    const authorName = author
+      .split(' ')
+      .map((part) => part[0].toUpperCase() + part.slice(1))
+      .join(' ');
+
+    authorEl.textContent = `Image Taken By: ${authorName}`;
+  };
+
+  const _renderImage = async () => {
+    const images = await _preloadImages();
+    document.body.style.backgroundImage = images[0].imageURL;
+    _renderAuthor(images[0].author);
+
+    setInterval(() => {
+      const i = Math.floor(Math.random() * 20);
+      document.body.style.backgroundImage = images[i].imageURL;
+      _renderAuthor(images[i].author);
+    }, 60000);
+    //document.body.style.backgroundImage = `url(${imageURL})`;
+    //_renderAuthor(author);
+  };
+
+  const render = async () => {
+    _renderImage();
     _renderCrypto();
-    setInterval(_renderTime, 1000); // run render time every second to keep time updated
     _renderWeather();
+    setInterval(_renderTime, 1000); // run render time every second to keep time updated
   };
 
   return { render };

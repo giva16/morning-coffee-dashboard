@@ -83,7 +83,7 @@ const DisplayController = (() => {
         const iconEl = _buildWeatherIcon(weatherData.iconURL);
         const detailsEl = _buildWeatherDetails(weatherData.city, weatherData.temp);
 
-        weatherEl.weatherEl.appendChild(iconEl);
+        weatherEl.appendChild(iconEl);
         weatherEl.appendChild(detailsEl);
       })
       .catch((error) => console.log(error));

@@ -52,10 +52,9 @@ const ApiHandler = (() => {
 
         const temp = data.main.temp;
         const city = data.name;
-        const description = data.weather[0].main;
         const iconURL = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`; // get icon url
 
-        resolve({ city, temp, iconURL, description });
+        resolve({ city, temp, iconURL });
       };
 
       const error = () => reject('Sorry, no weather data available');

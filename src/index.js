@@ -3,7 +3,7 @@ import './css/style.css';
 import ApiHandler from './ApiHandler';
 
 const DisplayController = (() => {
-  const renderAuthor = (author) => {
+  const _renderAuthor = (author) => {
     const footer = document.querySelector('footer');
     const divEl = document.createElement('div');
 
@@ -18,7 +18,7 @@ const DisplayController = (() => {
     footer.appendChild(divEl);
   };
 
-  const renderCrypto = async () => {
+  const _renderCrypto = async () => {
     const coins = ['ethereum', 'bitcoin'];
     const cryptoListEl = document.querySelector('.crypto');
 
@@ -53,7 +53,7 @@ const DisplayController = (() => {
     });
   };
 
-  const renderTime = () => {
+  const _renderTime = () => {
     const timeEl = document.querySelector('.time');
     const date = new Date();
 
@@ -63,11 +63,42 @@ const DisplayController = (() => {
     timeEl.textContent = time;
   };
 
-  const renderWeather = () => {
+  const _buildWeatherIcon = (iconURL) => {
+    const iconEl = document.createElement('img');
+
+    iconEl.classList.add('icon-weather');
+    iconEl.setAttribute('src', iconURL);
+
+    return iconEl;
+  };
+
+  const _buildWeatherDetails = (city, temp) => {
+    const detailsEl = document.createElement('div');
+    const cityEl = document.createElement('div');
+    const tempEl = document.createElement('div');
+
+    detailsEl.classList.add('details-weather');
+    cityEl.textContent = city;
+    tempEl.textContent = Math.ceil(temp) + String.fromCharCode(176);
+
+    detailsEl.appendChild(tempEl);
+    detailsEl.appendChild(cityEl);
+
+    return detailsEl;
+  };
+
+  const _renderWeather = () => {
     //use geolocation API to get current lat and long
     ApiHandler.getWeather('metric')
-      .then((weatherData) => console.log(weatherData))
-      .catch((error) => alert(error));
+      .then((weatherData) => {
+        const weatherEl = document.querySelector('.weather');
+        const iconEl = _buildWeatherIcon(weatherData.iconURL);
+        const detailsEl = _buildWeatherDetails(weatherData.city, weatherData.temp);
+
+        weatherEl.appendChild(iconEl);
+        weatherEl.appendChild(detailsEl);
+      })
+      .catch((error) => console.log(error));
     // pass lat and long to openweather api to get the weather based on location
   };
 
@@ -77,14 +108,13 @@ const DisplayController = (() => {
     const author = imageData.author;
 
     document.body.style.background = `url(${imageURL})`;
-    renderAuthor(author);
-    renderCrypto();
-    setInterval(renderTime, 1000); // run render time every second to keep time updated
+    _renderAuthor(author);
+    _renderCrypto();
+    setInterval(_renderTime, 1000); // run render time every second to keep time updated
+    _renderWeather();
   };
 
-  return { render, renderTime, renderWeather };
+  return { render };
 })();
 
 DisplayController.render();
-DisplayController.renderTime();
-DisplayController.renderWeather();
